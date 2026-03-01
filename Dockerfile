@@ -1,9 +1,12 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
 
-WORKDIR /app
+# Instalar extensiones necesarias para PostgreSQL
+RUN docker-php-ext-install pdo pdo_pgsql
 
-COPY . .
+# Copiar todos los archivos del proyecto al servidor Apache
+COPY . /var/www/html/
 
-EXPOSE 10000
+# Dar permisos a la carpeta uploads
+RUN chmod -R 777 /var/www/html/uploads
 
-CMD ["php", "-S", "0.0.0.0:10000"]
+EXPOSE 80

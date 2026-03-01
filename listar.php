@@ -1,12 +1,19 @@
 <?php
+require 'conexion.php';
 
-$conn = new mysqli("localhost", "root", "", "nube");
+try {
+    $stmt = $conn->query("SELECT * FROM archivos ORDER BY fecha DESC");
+    $archivos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$result = $conn->query("SELECT * FROM archivos");
+    if ($archivos) {
+        foreach ($archivos as $row) {
+            echo "<a href='" . $row['ruta'] . "' download>" . $row['nombre'] . "</a><br>";
+        }
+    } else {
+        echo "No hay archivos registrados.";
+    }
 
-while ($row = $result->fetch_assoc()) {
-    echo "<a href='".$row['ruta']."' download>".$row['nombre']."</a><br>";
+} catch (PDOException $e) {
+    echo "Error al consultar: " . $e->getMessage();
 }
-
-$conn->close();
 ?>
